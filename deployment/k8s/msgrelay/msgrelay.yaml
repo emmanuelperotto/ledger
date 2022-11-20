@@ -18,12 +18,3 @@ spec:
         - name: message-relay
           image: emmanuelperotto/msgrelay
           imagePullPolicy: Never
-#    metadata:
-#      labels:
-#        app: nginx
-#    spec:
-#      containers:
-#        - name: nginx
-#          image: nginx:1.14.2
-#          ports:
-#            - containerPort: 80
