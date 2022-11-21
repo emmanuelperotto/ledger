@@ -15,3 +15,8 @@ build:
 .PHONY: up
 up:
 	./bin/$(service)
+
+.PHONY: slqc
+sqlc:
+	go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
+	sqlc generate

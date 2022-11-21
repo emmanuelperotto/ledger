@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "scripts/query.sql"
+    schema: "scripts/schema.sql"
+    gen:
+      go:
+        package: "repository"
+        out: "internal/repository/sqlc"
+        emit_interface: true
+        emit_empty_slices: true
