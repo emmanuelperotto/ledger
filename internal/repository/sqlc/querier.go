@@ -6,14 +6,13 @@ package repository
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 type Querier interface {
-	CreateEvent(ctx context.Context, arg CreateEventParams) (Outbox, error)
-	DeleteEvents(ctx context.Context, eventIds []uuid.UUID) error
-	ListEvents(ctx context.Context) ([]Outbox, error)
+	AddToOutbox(ctx context.Context, arg AddToOutboxParams) (Outbox, error)
+	CreateEvent(ctx context.Context, arg CreateEventParams) (Event, error)
+	DeleteFromOutbox(ctx context.Context, eventIds []int32) error
+	ListOutbox(ctx context.Context) ([]Outbox, error)
 }
 
 var _ Querier = (*Queries)(nil)

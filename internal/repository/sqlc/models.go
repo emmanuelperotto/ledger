@@ -6,13 +6,23 @@ package repository
 
 import (
 	"database/sql"
+	"encoding/json"
+	"time"
 
-	"github.com/google/uuid"
 	"github.com/tabbed/pqtype"
 )
 
+type Event struct {
+	ID         int32
+	Type       string
+	EntityType string
+	EntityID   int32
+	EventData  json.RawMessage
+	CreatedAt  time.Time
+}
+
 type Outbox struct {
-	EventID       uuid.UUID
+	EventID       int32
 	EventType     string
 	AggregateType string
 	AggregateID   string
