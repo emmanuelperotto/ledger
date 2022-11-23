@@ -1,10 +1,13 @@
 create table if not exists outbox
 (
-    event_id       integer         not null primary key,
-    event_type     varchar(255) not null,
-    aggregate_type varchar(255) not null,
-    aggregate_id   varchar(255) not null,
+    event_id       integer not null
+        primary key,
+    event_type     varchar not null,
+    aggregate_type varchar not null,
+    aggregate_id   varchar not null,
     payload        jsonb,
-    created_at     timestamp default now()
+    created_at     timestamp with time zone default now()
 );
+
+
 
