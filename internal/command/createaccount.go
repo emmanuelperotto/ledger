@@ -1,5 +1,7 @@
 package command
 
+import "github.com/emmanuelperotto/ledger/internal/aggregate"
+
 type (
     CreateAccount struct {
         Email   string
@@ -14,10 +16,10 @@ func NewCreateAccount(email string, balance float64) CreateAccount {
     }
 }
 
-func (c CreateAccount) AggregateType() string {
-    return "account"
+func (c CreateAccount) AggregateType() aggregate.AggrType {
+    return aggregate.AccountType
 }
 
-func (c CreateAccount) CommandType() string {
+func (c CreateAccount) CommandType() CmdType {
     return "create_account"
 }
