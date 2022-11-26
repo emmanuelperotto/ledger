@@ -1,33 +1,42 @@
 package event
 
-import "github.com/emmanuelperotto/ledger/internal/aggregate"
-
-var (
-    AccountCreated EvtType = "account_created"
+import (
+    "github.com/emmanuelperotto/ledger/internal"
+    "github.com/google/uuid"
 )
 
 type (
-    AccountCreatedContent struct {
+    AccountCreatedPayload struct {
         Email   string
         Balance float64
     }
+
+    AccountCreated struct {
+        Payload AccountCreatedPayload
+
+        AggregateId uuid.UUID
+    }
 )
 
-func NewAccountCreatedContent(email string, balance float64) AccountCreatedContent {
-    return AccountCreatedContent{
-        Email:   email,
-        Balance: balance,
+func NewAccountCreated(aggregateId uuid.UUID, payload AccountCreatedPayload) AccountCreated {
+    return AccountCreated{
+        Payload:     payload,
+        AggregateId: aggregateId,
     }
 }
 
-func (a AccountCreatedContent) EventType() EvtType {
-    return "account_created"
+func (a AccountCreated) EventType() internal.EventType {
+    return internal.AccountCreatedEvent
 }
 
-func (a AccountCreatedContent) Data() any {
-    return a
+func (a AccountCreated) Data() any {
+    return a.Payload
 }
 
-func (a AccountCreatedContent) AggregateType() aggregate.AggrType {
-    return aggregate.AccountType
+func (a AccountCreated) AggregateType() internal.AggregateType {
+    return internal.AccountAggregateType
+}
+
+func (a AccountCreated) AggregateID() uuid.UUID {
+    return a.AggregateId
 }

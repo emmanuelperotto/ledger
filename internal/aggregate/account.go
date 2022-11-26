@@ -2,16 +2,15 @@ package aggregate
 
 import (
     "errors"
+    "github.com/emmanuelperotto/ledger/internal"
     "github.com/emmanuelperotto/ledger/internal/command"
     "github.com/emmanuelperotto/ledger/internal/event"
-)
-
-var (
-    AccountType AggrType = "account"
+    "github.com/google/uuid"
 )
 
 type (
     Account struct {
+        Id      uuid.UUID
         Email   string
         Balance float64
     }
@@ -25,7 +24,10 @@ func (a *Account) ProcessCommand(cmd command.Command) ([]event.Event, error) {
     switch cmd := cmd.(type) {
     case command.CreateAccount:
         events := []event.Event{
-            event.NewAccountCreatedContent(cmd.Email, cmd.Balance),
+            event.NewAccountCreated(cmd.AggregateID(), event.AccountCreatedPayload{
+                Email:   cmd.Email,
+                Balance: cmd.Balance,
+            }),
         }
 
         return events, nil
@@ -36,8 +38,9 @@ func (a *Account) ProcessCommand(cmd command.Command) ([]event.Event, error) {
 
 func (a *Account) ApplyEvent(e event.Event) error {
     switch e.EventType() {
-    case event.AccountCreated:
-        if content, ok := e.Data().(event.AccountCreatedContent); ok {
+    case internal.AccountCreatedEvent:
+        if content, ok := e.Data().(event.AccountCreatedPayload); ok {
+            a.Id = e.AggregateID()
             a.Email = content.Email
             a.Balance = content.Balance
             return nil

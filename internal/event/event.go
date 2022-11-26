@@ -1,10 +1,11 @@
 package event
 
-import "github.com/emmanuelperotto/ledger/internal/aggregate"
+import (
+    "github.com/emmanuelperotto/ledger/internal"
+    "github.com/google/uuid"
+)
 
 type (
-    EvtType string
-
     // Event is a domain event describing a change that has happened to an aggregate.
     //
     // An event struct and type name should:
@@ -14,13 +15,16 @@ type (
     // The event should contain all the data needed when applying/handling it.
     Event interface {
         // EventType returns the type of the event.
-        EventType() EvtType
+        EventType() internal.EventType
 
         // AggregateType is the type of the aggregate that the event can be
         // applied to.
-        AggregateType() aggregate.AggrType
+        AggregateType() internal.AggregateType
 
-        //Data returns the payload of the event
+        // AggregateID is the ID of the aggregate that the event belongs to.
+        AggregateID() uuid.UUID
+
+        //Data returns the AccountCreatedPayload of the event
         Data() any
     }
 )
