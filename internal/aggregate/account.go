@@ -6,6 +6,7 @@ import (
     "github.com/emmanuelperotto/ledger/internal/command"
     "github.com/emmanuelperotto/ledger/internal/event"
     "github.com/google/uuid"
+    "log"
 )
 
 type (
@@ -31,12 +32,18 @@ func (a *Account) ProcessCommand(cmd command.Command) ([]event.Event, error) {
         }
 
         return events, nil
+    case command.CreditAccount:
+        events := []event.Event{
+            event.NewAccountCredited(cmd.AccountId, cmd.Value),
+        }
+        return events, nil
     default:
         return nil, errors.New("invalid command")
     }
 }
 
 func (a *Account) ApplyEvent(e event.Event) error {
+    log.Println("current aggregate state", a)
     switch e.EventType() {
     case internal.AccountCreatedEvent:
         if content, ok := e.Data().(event.AccountCreatedPayload); ok {
@@ -45,8 +52,14 @@ func (a *Account) ApplyEvent(e event.Event) error {
             a.Balance = content.Balance
             return nil
         }
+        return internal.ErrUnprocessableEvent
 
-        return errors.New("unprocessable event data")
+    case internal.AccountCreditedEvent:
+        if content, ok := e.Data().(event.AccountCreditedPayload); ok {
+            a.Balance += content.Value
+            return nil
+        }
+        return internal.ErrUnprocessableEvent
     default:
         return nil
     }
