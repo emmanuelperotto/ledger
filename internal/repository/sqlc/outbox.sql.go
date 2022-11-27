@@ -7,9 +7,9 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/lib/pq"
-	"github.com/tabbed/pqtype"
 )
 
 const addToOutbox = `-- name: AddToOutbox :one
@@ -26,7 +26,7 @@ type AddToOutboxParams struct {
 	EventType     string
 	AggregateType string
 	AggregateID   string
-	Payload       pqtype.NullRawMessage
+	Payload       json.RawMessage
 }
 
 func (q *Queries) AddToOutbox(ctx context.Context, arg AddToOutboxParams) (Outbox, error) {

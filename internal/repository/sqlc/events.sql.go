@@ -7,29 +7,36 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
 )
 
 const createEvent = `-- name: CreateEvent :one
 INSERT INTO events (
-    "type", entity_type, entity_id, event_data
+    event_type, entity_type, entity_id, event_data
 ) VALUES (
-    $1, $2, $3, $3
+    $1, $2, $3, $4
  )
-RETURNING id, type, entity_type, entity_id, event_data, created_at
+RETURNING id, event_type, entity_type, entity_id, event_data, created_at
 `
 
 type CreateEventParams struct {
-	Type       string
+	EventType  string
 	EntityType string
-	EntityID   int32
+	EntityID   string
+	EventData  json.RawMessage
 }
 
 func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event, error) {
-	row := q.db.QueryRowContext(ctx, createEvent, arg.Type, arg.EntityType, arg.EntityID)
+	row := q.db.QueryRowContext(ctx, createEvent,
+		arg.EventType,
+		arg.EntityType,
+		arg.EntityID,
+		arg.EventData,
+	)
 	var i Event
 	err := row.Scan(
 		&i.ID,
-		&i.Type,
+		&i.EventType,
 		&i.EntityType,
 		&i.EntityID,
 		&i.EventData,

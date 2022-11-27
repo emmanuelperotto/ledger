@@ -21,7 +21,7 @@ func main() {
 
     queries := repository.New(db)
 
-    events, err := queries.ListEvents(context.Background())
+    events, err := queries.ListOutbox(context.Background())
     if err != nil {
         return
     }

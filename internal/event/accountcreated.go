@@ -7,8 +7,8 @@ import (
 
 type (
     AccountCreatedPayload struct {
-        Email   string
-        Balance float64
+        Email   string  `json:"email"`
+        Balance float64 `json:"balance"`
     }
 
     AccountCreated struct {

@@ -8,15 +8,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"time"
-
-	"github.com/tabbed/pqtype"
 )
 
 type Event struct {
 	ID         int32
-	Type       string
+	EventType  string
 	EntityType string
-	EntityID   int32
+	EntityID   string
 	EventData  json.RawMessage
 	CreatedAt  time.Time
 }
@@ -26,6 +24,6 @@ type Outbox struct {
 	EventType     string
 	AggregateType string
 	AggregateID   string
-	Payload       pqtype.NullRawMessage
+	Payload       json.RawMessage
 	CreatedAt     sql.NullTime
 }

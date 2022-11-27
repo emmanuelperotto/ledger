@@ -7,7 +7,7 @@ import (
 
 type (
     AccountCreditedPayload struct {
-        Value float64
+        Value float64 `json:"value"`
     }
 
     AccountCredited struct {
